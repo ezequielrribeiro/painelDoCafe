@@ -1,16 +1,8 @@
-# This is a sample Python script.
+import tkinter as tk
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('Mia')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+root = tk.Tk()
+root.title("Painel - Café")
+root.geometry("300x200")
+label = tk.Label(root, text="Primeira tela do app")
+label.pack(pady=20)
+root.mainloop()
