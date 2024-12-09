@@ -18,6 +18,6 @@ o painel do café faz a coleta a partir dos sites:
 
 atualmente, o painel realiza:
 
-- coleta de informações dos sites
-- levantamento de preços e promoções
-- levantamento de cupons de desconto
+- coleta de informações dos sites (a desenvolver)
+- levantamento de preços e promoções (a desenvolver)
+- levantamento de cupons de desconto (a desenvolver)
