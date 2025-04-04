@@ -1,8 +1,5 @@
-import tkinter as tk
+from controller import PainelController
 
-root = tk.Tk()
-root.title("Painel - Café")
-root.geometry("300x200")
-label = tk.Label(root, text="Primeira tela do app")
-label.pack(pady=20)
-root.mainloop()
+if __name__ == "__main__":
+    controller = PainelController()
+    controller.run()
