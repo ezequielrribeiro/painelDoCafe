@@ -4,7 +4,7 @@ Painel do café: um painel para a automatização da compra de cafés especiais 
 ## desenvolvimento
 
 Trata-se de uma aplicação local, desenvolvida utilizando:
-- tkinter: interface gráfica
+- textual: interface TUI (text user interface)
 - selenium: motor para fazer o webscrapping nos sites
 
 ## sites suportados
@@ -21,3 +21,32 @@ atualmente, o painel realiza:
 - coleta de informações dos sites (a desenvolver)
 - levantamento de preços e promoções (a desenvolver)
 - levantamento de cupons de desconto (a desenvolver)
+
+## comandos
+
+permitir powershell executar scripts:
+```
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+ativar ambiente virtual:
+```
+python -m venv venv
+source venv/bin/activate
+.\venv\Scripts\activate
+```
+
+instalar dependências:
+```
+pip install -r requirements.txt
+```
+desativar ambiente virtual:
+```
+.\venv\Scripts\deactivate
+```
+
+executar script:
+```
+python main.py
+```
+
