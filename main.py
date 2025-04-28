@@ -1,5 +1,5 @@
-from controller import PainelController
+from interface import PainelCafeApp
 
 if __name__ == "__main__":
-    controller = PainelController()
-    controller.run()
+    app = PainelCafeApp()
+    app.run()

@@ -29,10 +29,14 @@ permitir powershell executar scripts:
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
-ativar ambiente virtual:
+instalar ambiente virtual:
 ```
 python -m venv venv
 source venv/bin/activate
+```
+
+ativar ambiente virtual:
+```
 .\venv\Scripts\activate
 ```
 
