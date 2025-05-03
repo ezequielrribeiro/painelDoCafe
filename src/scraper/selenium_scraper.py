@@ -52,8 +52,9 @@ class SeleniumScraper:
             WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((By.TAG_NAME, "body"))
             )
-        except TimeoutException:
-            self.logger.warning("Timeout waiting for page to load")
+        except TimeoutException as e:
+            self.logger.error("Timeout waiting for page to load")
+            raise TimeoutException("Page load timeout exceeded") from e
 
     def scrapeEnd(self) -> None:
         self.driver.quit()
