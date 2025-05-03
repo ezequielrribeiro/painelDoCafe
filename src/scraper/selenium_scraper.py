@@ -7,9 +7,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, WebDriverException
 
 class SeleniumScraper:
+    __url: str
 
-    def __init__(self, url = None, loggingFile = None):
-        self.url = url
+    def __init__(self, loggingFile = None):
         logging.basicConfig(filename=loggingFile, level=logging.INFO)
         self.logger = logging.getLogger(__name__)
         self._setup_driver()
@@ -34,9 +34,9 @@ class SeleniumScraper:
             self.logger.error(f"Failed to initialize Chrome WebDriver: {str(e)}")
             raise
 
-    def setURL(self, url) -> None:
+    def __setURL(self, url) -> None:
         """Set the site's url to scrape"""
-        self.url = url
+        self.__url = url
 
     def __parseMethod(self, body) -> None:
         pass
@@ -44,8 +44,8 @@ class SeleniumScraper:
     def __scrapeInit(self) -> None:
         """Inits driver, access url and waits body element to be ready"""
         # Navigate to the URL
-        self.logger.info(f"Navigating to {self.url}...")
-        self.driver.get(self.url)
+        self.logger.info(f"Navigating to {self.__url}...")
+        self.driver.get(self.__url)
 
         # Wait for the page to load
         try:
@@ -66,9 +66,6 @@ class SeleniumScraper:
 
     def scrapeSite(self) -> None:
         """Scrape using the configured parse method"""
-        if self.parse_method is None:
-            raise ValueError("No parse method configured. Use setParseMethod() to set one.")
-
         try:
             self.__scrapeInit()
             body = self.driver.find_element(By.TAG_NAME, "body")
