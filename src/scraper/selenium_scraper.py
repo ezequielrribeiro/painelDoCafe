@@ -1,19 +1,14 @@
-import argparse
 import logging
-from pathlib import Path
-from urllib.parse import urlparse
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, WebDriverException
-import re
 
 class SeleniumScraper:
 
-    def __init__(self, url, loggingFile = None):
+    def __init__(self, url = None, loggingFile = None):
         self.url = url
         logging.basicConfig(filename=loggingFile, level=logging.INFO)
         self.logger = logging.getLogger(__name__)
@@ -40,9 +35,14 @@ class SeleniumScraper:
             raise
 
     def setURL(self, url) -> None:
+        """Set the site's url to scrape"""
         self.url = url
 
-    def scrapeInit(self) -> None:
+    def __parseMethod(self, body) -> None:
+        pass
+
+    def __scrapeInit(self) -> None:
+        """Inits driver, access url and waits body element to be ready"""
         # Navigate to the URL
         self.logger.info(f"Navigating to {self.url}...")
         self.driver.get(self.url)
@@ -54,7 +54,27 @@ class SeleniumScraper:
             )
         except TimeoutException as e:
             self.logger.error("Timeout waiting for page to load")
-            raise TimeoutException("Page load timeout exceeded") from e
+            raise
+        except WebDriverException as e:
+            self.logger.error(f"WebDriver Error: {str(e)}")
+            raise
 
-    def scrapeEnd(self) -> None:
+    def __scrapeEnd(self) -> None:
+        """Ends the scrape process"""
+        self.logger.info("Ending scraping process...")
         self.driver.quit()
+
+    def scrapeSite(self) -> None:
+        """Scrape using the configured parse method"""
+        if self.parse_method is None:
+            raise ValueError("No parse method configured. Use setParseMethod() to set one.")
+
+        try:
+            self.__scrapeInit()
+            body = self.driver.find_element(By.TAG_NAME, "body")
+            self.__parseMethod(body)
+        except Exception as e:
+            self.logger.error(f"Error during scraping: {str(e)}")
+            raise
+        finally:
+            self.__scrapeEnd()
