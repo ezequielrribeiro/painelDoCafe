@@ -5,13 +5,17 @@ class LoadPromoEncantos(SeleniumScraper):
 
     def __init__(self, loggingFile=None):
         super().__init__(loggingFile)
-        self.setURL("https://loja.encantosdocafe.com.br/produtos?promotion=1&page=1")
+        self._setURL("https://loja.encantosdocafe.com.br/produtos?promotion=1&page=1")
         self.markdown = ''
 
     def _parseMethod(self, body) -> None:
         # get product names and prizes
         for a in body.find_elements(By.CLASS_NAME, 'product-link'):
-            self.logger.info(f"product:{a.get_attribute('aria-label')}")
+            self.logger.info(f"product: {a.get_attribute('aria-label')}")
+            test = a.find_element(By.CLASS_NAME, 'discount').text
+            self.logger.info(f"  original prize: {test}")
+            test = a.find_element(By.CLASS_NAME, 'price').text
+            self.logger.info(f"  discount prize: {test}")
 
 
 

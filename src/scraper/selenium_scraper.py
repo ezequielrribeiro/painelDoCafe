@@ -34,7 +34,7 @@ class SeleniumScraper:
             self.logger.error(f"Failed to initialize Chrome WebDriver: {str(e)}")
             raise
 
-    def setURL(self, url) -> None:
+    def _setURL(self, url) -> None:
         """Set the site's url to scrape"""
         self.__url = url
 
