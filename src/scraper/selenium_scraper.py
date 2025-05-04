@@ -29,19 +29,19 @@ class SeleniumScraper:
         # Initialize WebDriver
         self.logger.info("Initializing WebDriver...")
         try:
-            self.driver = webdriver.Chrome(options=self.chrome_options)
+            self.driver = webdriver.Chrome(options=chrome_options)
         except Exception as e:
             self.logger.error(f"Failed to initialize Chrome WebDriver: {str(e)}")
             raise
 
-    def __setURL(self, url) -> None:
+    def setURL(self, url) -> None:
         """Set the site's url to scrape"""
         self.__url = url
 
-    def __parseMethod(self, body) -> None:
+    def _parseMethod(self, body) -> None:
         pass
 
-    def __scrapeInit(self) -> None:
+    def _scrapeInit(self) -> None:
         """Inits driver, access url and waits body element to be ready"""
         # Navigate to the URL
         self.logger.info(f"Navigating to {self.__url}...")
@@ -59,7 +59,7 @@ class SeleniumScraper:
             self.logger.error(f"WebDriver Error: {str(e)}")
             raise
 
-    def __scrapeEnd(self) -> None:
+    def _scrapeEnd(self) -> None:
         """Ends the scrape process"""
         self.logger.info("Ending scraping process...")
         self.driver.quit()
@@ -67,11 +67,11 @@ class SeleniumScraper:
     def scrapeSite(self) -> None:
         """Scrape using the configured parse method"""
         try:
-            self.__scrapeInit()
+            self._scrapeInit()
             body = self.driver.find_element(By.TAG_NAME, "body")
-            self.__parseMethod(body)
+            self._parseMethod(body)
         except Exception as e:
             self.logger.error(f"Error during scraping: {str(e)}")
             raise
         finally:
-            self.__scrapeEnd()
+            self._scrapeEnd()
