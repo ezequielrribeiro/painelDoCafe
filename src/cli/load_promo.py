@@ -1,21 +1,24 @@
 from src.scraper.selenium_scraper import SeleniumScraper
 from selenium.webdriver.common.by import By
 
-class LoadPromoEncantos(SeleniumScraper):
+class LoadPromos:
 
-    def __init__(self, loggingFile=None):
-        super().__init__(loggingFile)
-        self._setURL("https://loja.encantosdocafe.com.br/produtos?promotion=1&page=1")
+    def __init__(self):
+        self.scraper = SeleniumScraper()
         self.markdown = ''
 
-    def _parseMethod(self, body) -> None:
+    def scrapePromos(self) -> None:
+        self.scraper.scrapeSite("https://loja.encantosdocafe.com.br/produtos?promotion=1&page=1", self._parsePromoEncantos)
+        self.scraper.scrapeEnd()
+
+    def _parsePromoEncantos(self, body) -> None:
         # get product names and prizes
         for a in body.find_elements(By.CLASS_NAME, 'product-link'):
-            self.logger.info(f"product: {a.get_attribute('aria-label')}")
+            print(f"product: {a.get_attribute('aria-label')}")
             test = a.find_element(By.CLASS_NAME, 'discount').text
-            self.logger.info(f"  original prize: {test}")
+            print(f"  original prize: {test}")
             test = a.find_element(By.CLASS_NAME, 'price').text
-            self.logger.info(f"  discount prize: {test}")
+            print(f"  discount prize: {test}")
 
 
 
@@ -112,8 +115,8 @@ class LoadPromoEncantos(SeleniumScraper):
 #     return markdown_text.strip()
 
 def main():
-    promo = LoadPromoEncantos()
-    promo.scrapeSite()
+    promo = LoadPromos()
+    promo.scrapePromos()
 
 if __name__ == '__main__':
     main()
