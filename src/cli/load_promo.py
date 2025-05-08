@@ -8,10 +8,11 @@ class LoadPromos:
         self.markdown = ''
 
     def scrapePromos(self) -> None:
-        self.scraper.scrapeSite("https://loja.encantosdocafe.com.br/produtos?promotion=1&page=1", self._parsePromoEncantos)
+        self._scrapePromoEncantos()
         self.scraper.scrapeEnd()
 
-    def _parsePromoEncantos(self, body) -> None:
+    def _scrapePromoEncantos(self) -> None:
+        body = self.scraper.scrapeSite("https://loja.encantosdocafe.com.br/produtos?promotion=1&page=1")
         # get product names and prizes
         for a in body.find_elements(By.CLASS_NAME, 'product-link'):
             print(f"product: {a.get_attribute('aria-label')}")
@@ -19,6 +20,12 @@ class LoadPromos:
             print(f"  original prize: {test}")
             test = a.find_element(By.CLASS_NAME, 'price').text
             print(f"  discount prize: {test}")
+            print(f"  link: {a.get_attribute('href')}")
+            # get product description getting it at page at href
+            body_a = self.scraper.scrapeSite(a.get_attribute('href'))
+            test = body_a.find_element(By.CLASS_NAME, 'product-description-item').text
+            print(f"  product-description: {test}")
+            # todo: resolve StaleElementReferenceException, doing a wide walking, by example, getting all necessary elements for each page
 
 
 

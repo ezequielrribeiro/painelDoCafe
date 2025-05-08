@@ -1,10 +1,13 @@
 import logging
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, WebDriverException
+from selenium.webdriver.remote.webelement import WebElement
+import re
 
 class SeleniumScraper:
 
@@ -54,14 +57,13 @@ class SeleniumScraper:
         self.logger.info("Ending scraping process...")
         self.driver.quit()
 
-    def scrapeSite(self, url: str, parse_func) -> None:
+    def scrapeSite(self, url: str, find_element_by: str = By.TAG_NAME, find_element_value: str = "body") -> WebElement:
         """Scrape a specific site using the provided parse function"""
         try:
             self.logger.info(f"Navigating to {url}...")
             self.driver.get(url)
             self._scrapeInit()
-            body = self.driver.find_element(By.TAG_NAME, "body")
-            parse_func(body)  # Call the provided parse function
+            return self.driver.find_element(find_element_by, find_element_value)
         except Exception as e:
             self.logger.error(f"Error during scraping: {str(e)}")
             raise
