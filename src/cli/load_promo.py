@@ -18,6 +18,9 @@ class LoadPromos:
         body = self.scraper.scrapeSite("https://loja.encantosdocafe.com.br/produtos?promotion=1&page=1")
         # get product names and prizes
         for a in body.find_elements(By.CLASS_NAME, 'product-link'):
+            # ignore elements with blank prices and discounts
+            if a.find_element(By.CLASS_NAME, 'discount').text == '':
+                continue
             # Create a dictionary with product info
             product_info = {
                 'name': a.get_attribute('aria-label'),
