@@ -7,15 +7,18 @@ class LoadPromos:
 
     def __init__(self):
         self.__products = []
-        self.scraper = SeleniumScraper()
-        self.markdown = ''
+        self.__scraper = SeleniumScraper()
+        self.__markdown = "# Promoções\n\n"
 
     def scrapePromos(self) -> None:
         self._scrapePromoEncantos()
-        self.scraper.scrapeEnd()
+        self.__scraper.scrapeEnd()
+
+    def getPromosMarkdown(self) -> str:
+        return self.__markdown
 
     def _scrapePromoEncantos(self) -> None:
-        body = self.scraper.scrapeSite("https://loja.encantosdocafe.com.br/produtos?promotion=1&page=1")
+        body = self.__scraper.scrapeSite("https://loja.encantosdocafe.com.br/produtos?promotion=1&page=1")
         # get product names and prizes
         for a in body.find_elements(By.CLASS_NAME, 'product-link'):
             # ignore elements with blank prices and discounts
@@ -33,10 +36,18 @@ class LoadPromos:
         
         # get product description
         for product in self.__products:
-            body_a = self.scraper.scrapeSite(product['link'])
+            body_a = self.__scraper.scrapeSite(product['link'])
             product['description'] = body_a.find_element(By.CLASS_NAME, 'product-description-item').text
-        
-        print(self.__products)
+
+        # Convert products list to markdown format
+        self.__markdown = "## Encantos do Café\n\n"
+        for product in self.__products:
+            self.__markdown += f"- produto: {product['name']}\n\n"
+            self.__markdown += f"- descrição: {product['description']}\n\n"
+            self.__markdown += f"- preço original: {product['original_price']}\n\n"
+            self.__markdown += f"- preço com desconto: {product['discount_price']}\n\n"
+            self.__markdown += f"- URL: [{product['link']}]({product['link']})\n\n"
+            self.__markdown += "---\n\n"
 
 def main():
     promo = LoadPromos()
