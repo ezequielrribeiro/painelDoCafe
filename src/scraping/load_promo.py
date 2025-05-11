@@ -12,13 +12,14 @@ class LoadPromos:
 
     def scrapePromos(self) -> None:
         self._scrapePromoEncantos()
+        self._scrapePromoDutra()
         self.__scraper.scrapeEnd()
         self.__convertPromoToMarkdown()
 
     def __convertPromoToMarkdown(self) -> None:
         # Convert products dictionary to markdown format
         for product_manufacturer, product_list in self.__products.items():
-            self.__markdown = f"## {product_manufacturer}\n\n"
+            self.__markdown += f"## {product_manufacturer}\n\n"
             for product in product_list:
                 self.__markdown += f"### {product['name']}\n\n"
                 self.__markdown += f"- preço: ~~{product['original_price']}~~ {product['discount_price']}\n\n\n\n"
@@ -53,6 +54,31 @@ class LoadPromos:
         for product in self.__products['Encantos do Café']:
             body_a = self.__scraper.scrapeSite(product['link'])
             product['description'] = body_a.find_element(By.CLASS_NAME, 'product-description-item').text
+
+    def _scrapePromoDutra(self) -> None:
+        body = self.__scraper.scrapeSite("https://loja.cafedutra.com.br/product-category/kits-presentes/")
+        # Initialize the list for Dutra products
+        self.__products['Café Dutra'] = []
+        
+        # get product names and prizes
+        for li in body.find_elements(By.CLASS_NAME, 'product_cat-kits-presentes'):
+            # ignore elements with blank prices and discounts
+            # if li.find_element(By.CLASS_NAME, 'woocommerce-loop-product__title').text == '':
+                # continue
+            # Create a dictionary with product info
+            product_info = {
+                'name': li.find_element(By.CLASS_NAME, 'woocommerce-loop-product__title').text,
+                'original_price': li.find_element(By.TAG_NAME, 'del').text,
+                'discount_price': li.find_element(By.TAG_NAME, 'bdi').text,
+                'link': li.find_element(By.TAG_NAME, 'a').get_attribute('href')
+            }
+            # Add to products list
+            self.__products['Café Dutra'].append(product_info)
+        
+        # get product description
+        for product in self.__products['Café Dutra']:
+            body_a = self.__scraper.scrapeSite(product['link'])
+            product['description'] = body_a.find_element(By.CLASS_NAME, 'elementor-tab-content').get_dom_attribute('innerText')
 
 def main():
     promo = LoadPromos()
