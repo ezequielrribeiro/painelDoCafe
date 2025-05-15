@@ -1,5 +1,5 @@
 class TmpCache:
-    __cache_items: dict[str, list[dict]]
+    __cache_items: dict[str, dict]
 
     def __init__(self, file_path: str = "tmp_cache.json", default_expiration_time: int = 24) -> None:
         self.set_file_path(file_path)
