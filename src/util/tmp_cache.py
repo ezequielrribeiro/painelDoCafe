@@ -45,7 +45,6 @@ class TmpCache:
 
     def add_item(self, key: str, data, expiration_time: int = None) -> None:
         if key in self.__cache_items:
-            self.upd_item(key, data, expiration_time)
             return
 
         if expiration_time == None:
@@ -56,8 +55,7 @@ class TmpCache:
 
     def upd_item(self, key: str, data, expiration_time: int = None) -> None:
         if key not in self.__cache_items:
-            self.add_item(key, data, expiration_time)
-            return
+            raise Exception(f"key {key} not in cache")
 
         if expiration_time == None:
             expiration_time = self.__default_expiration_time
