@@ -5,8 +5,8 @@ from src.scraping.load_promo import LoadPromos
 
 if __name__ == "__main__":
     promoScrap = LoadPromos()
-    promoScrap.scrapePromos()
+    promoScrap.scrape_promos()
 
     app = PainelCafeApp()
-    app.setPromoMarkdown(promoScrap.getPromosMarkdown())
+    app.set_promo_markdown(promoScrap.get_promos_markdown())
     app.run()

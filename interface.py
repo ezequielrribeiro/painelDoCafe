@@ -9,7 +9,7 @@ class PainelCafeApp(App):
     # CSS_PATH = "painel_cafe.tcss"
     __promo_markdown: str
 
-    def setPromoMarkdown(self, promos: str) -> None:
+    def set_promo_markdown(self, promos: str) -> None:
         self.__promo_markdown = promos
 
     def __compose_form_compras(self) -> ComposeResult:

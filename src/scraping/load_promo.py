@@ -29,14 +29,14 @@ class LoadPromos:
         self.__cache_info.load()
         self.__products = self.__cache_info.get_all_items()
 
-    def scrapePromos(self) -> None:
-        self._scrapePromoEncantos()
-        self._scrapePromoDutra()
-        self.__scraper.scrapeEnd()
-        self.__convertPromoToMarkdown()
+    def scrape_promos(self) -> None:
+        self._scrape_promo_encantos()
+        self._scrape_promo_dutra()
+        self.__scraper.scrape_end()
+        self.__convert_promo_to_markdown()
         self.__save_to_cache()
 
-    def __convertPromoToMarkdown(self) -> None:
+    def __convert_promo_to_markdown(self) -> None:
         # Convert products dictionary to markdown format
         for product_manufacturer, product_list in self.__products.items():
             self.__markdown += f"## {product_manufacturer}\n\n"
@@ -47,10 +47,10 @@ class LoadPromos:
                 self.__markdown += f"- URL: [{product['link']}]({product['link']})\n\n"
                 self.__markdown += "---\n\n"
 
-    def getPromosMarkdown(self) -> str:
+    def get_promos_markdown(self) -> str:
         return self.__markdown
 
-    def _scrapePromoEncantos(self) -> None:
+    def _scrape_promo_encantos(self) -> None:
         if 'Encantos do Café' in self.__products:
             return
 
@@ -79,7 +79,7 @@ class LoadPromos:
             body_a = self.__scraper.scrapeSite(product['link'])
             product['description'] = body_a.find_element(By.CLASS_NAME, 'product-description-item').text
 
-    def _scrapePromoDutra(self) -> None:
+    def _scrape_promo_dutra(self) -> None:
         if 'Café Dutra' in self.__products:
             return
 
@@ -109,7 +109,7 @@ class LoadPromos:
 
 def main():
     promo = LoadPromos()
-    promo.scrapePromos()
+    promo.scrape_promos()
 
 if __name__ == '__main__':
     main()
