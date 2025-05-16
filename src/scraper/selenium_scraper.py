@@ -14,7 +14,7 @@ class SeleniumScraper:
     def __init__(self, loggingFile = None, chrome_options = None):
         self.__chrome_options = chrome_options
         logging.basicConfig(filename=loggingFile, level=logging.INFO)
-        self.logger = logging.getLogger(__name__)
+        self._logger = logging.getLogger(__name__)
         self._setup_driver()
 
     def _setup_driver(self) -> None:
@@ -31,39 +31,39 @@ class SeleniumScraper:
         self.__chrome_options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')
 
         # Initialize WebDriver
-        self.logger.info("Initializing WebDriver...")
+        self._logger.info("Initializing WebDriver...")
         try:
-            self.driver = webdriver.Chrome(options=self.__chrome_options)
+            self._driver = webdriver.Chrome(options=self.__chrome_options)
         except Exception as e:
-            self.logger.error(f"Failed to initialize Chrome WebDriver: {str(e)}")
+            self._logger.error(f"Failed to initialize Chrome WebDriver: {str(e)}")
             raise
 
-    def _scrapeInit(self) -> None:
+    def _scrape_init(self) -> None:
         """Inits driver, access url and waits body element to be ready"""
         # Wait for the page to load
         try:
-            WebDriverWait(self.driver, 10).until(
+            WebDriverWait(self._driver, 10).until(
                 EC.presence_of_element_located((By.TAG_NAME, "body"))
             )
         except TimeoutException as e:
-            self.logger.error("Timeout waiting for page to load")
+            self._logger.error("Timeout waiting for page to load")
             raise
         except WebDriverException as e:
-            self.logger.error(f"WebDriver Error: {str(e)}")
+            self._logger.error(f"WebDriver Error: {str(e)}")
             raise
 
-    def scrapeEnd(self) -> None:
+    def scrape_end(self) -> None:
         """Ends the scrape process"""
-        self.logger.info("Ending scraping process...")
-        self.driver.quit()
+        self._logger.info("Ending scraping process...")
+        self._driver.quit()
 
-    def scrapeSite(self, url: str, find_element_by: str = By.TAG_NAME, find_element_value: str = "body") -> WebElement:
+    def scrape_site(self, url: str, find_element_by: str = By.TAG_NAME, find_element_value: str = "body") -> WebElement:
         """Scrape a specific site using the provided parse function"""
         try:
-            self.logger.info(f"Navigating to {url}...")
-            self.driver.get(url)
-            self._scrapeInit()
-            return self.driver.find_element(find_element_by, find_element_value)
+            self._logger.info(f"Navigating to {url}...")
+            self._driver.get(url)
+            self._scrape_init()
+            return self._driver.find_element(find_element_by, find_element_value)
         except Exception as e:
-            self.logger.error(f"Error during scraping: {str(e)}")
+            self._logger.error(f"Error during scraping: {str(e)}")
             raise
