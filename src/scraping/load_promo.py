@@ -1,16 +1,14 @@
 from src.scraper.selenium_scraper import SeleniumScraper
+from src.util.tmp_cache import TmpCache
 from selenium.webdriver.common.by import By
-import json
-import os
-from datetime import datetime, timedelta
 
 class LoadPromos:
 
     __products: dict[str, list[dict]]
+    __cache_info: TmpCache
     __CACHE_FILE = "promo_cache.json"
 
     def __init__(self):
-        self.__cache_info = {}
         self.__products = {}
         self.__scraper = SeleniumScraper()
         self.__markdown = ''
@@ -18,48 +16,18 @@ class LoadPromos:
 
     def __save_to_cache(self) -> None:
         """Save products data to cache file with timestamp."""
-        # update items at cache_info
-        actual_timestamp = datetime.now().isoformat()
-        write_cache_info = {store: actual_timestamp for store in self.__products.keys()}
-        for store, timestamp_str in self.__cache_info.items():
-            if store in self.__cache_info:
-                write_cache_info[store] = timestamp_str
-            else:
-                write_cache_info[store] = actual_timestamp
+        # add/update items at cache_info
+        for store, products in self.__products.items():
+            self.__cache_info.add_item(store, products)
 
-        cache_data = {
-            'timestamp': write_cache_info,
-            'products': self.__products
-        }
+        self.__cache_info.flush()
 
-        with open(self.__CACHE_FILE, 'w', encoding='utf-8') as f:
-            json.dump(cache_data, f, ensure_ascii=False, indent=2)
 
     def __load_from_cache(self) -> None:
         """Load products data from cache file if it exists."""
-        if os.path.exists(self.__CACHE_FILE):
-            try:
-                with open(self.__CACHE_FILE, 'r', encoding='utf-8') as f:
-                    cache_data = json.load(f)
-                    keep_cache_info = {}
-                    keep_cache_data = {}
-
-                    now = datetime.now()
-
-                    # Iterate through products for each store in cache
-                    for store, timestamp_str in cache_data['timestamp'].items():
-                        timestamp = datetime.fromisoformat(timestamp_str)
-                        if now - timestamp > timedelta(hours=24):
-                            continue
-                        keep_cache_info[store] = timestamp_str
-                        keep_cache_data[store] = cache_data['products'][store]
-
-                    self.__cache_info = keep_cache_info
-                    self.__products = keep_cache_data
-
-            except (json.JSONDecodeError, KeyError):
-                self.__products = {}
-                self.__cache_info = {}
+        self.__cache_info = TmpCache(self.__CACHE_FILE)
+        self.__cache_info.load()
+        self.__products = self.__cache_info.get_all_items()
 
     def scrapePromos(self) -> None:
         self._scrapePromoEncantos()
