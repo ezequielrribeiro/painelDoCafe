@@ -29,7 +29,7 @@ class PainelCafeApp(App):
         yield Header()
         with TabbedContent():
             with TabPane("Promocoes"):
-                yield MarkdownViewer(markdown=self.__promo_markdown, show_table_of_contents=True)
+                yield MarkdownViewer(markdown=self.__promo_markdown, show_table_of_contents=True, open_links=False)
             with TabPane("Compras"):
                 yield from self.__compose_form_compras()
             with TabPane("Receitas"):

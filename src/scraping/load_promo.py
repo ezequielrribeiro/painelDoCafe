@@ -54,7 +54,7 @@ class LoadPromos:
         if 'Encantos do Café' in self.__products:
             return
 
-        body = self.__scraper.scrapeSite("https://loja.encantosdocafe.com.br/produtos?promotion=1&page=1")
+        body = self.__scraper.scrape_site("https://loja.encantosdocafe.com.br/produtos?promotion=1&page=1")
 
         # Initialize the list for Encantos do Café products
         self.__products['Encantos do Café'] = []
@@ -76,14 +76,14 @@ class LoadPromos:
         
         # get product description
         for product in self.__products['Encantos do Café']:
-            body_a = self.__scraper.scrapeSite(product['link'])
+            body_a = self.__scraper.scrape_site(product['link'])
             product['description'] = body_a.find_element(By.CLASS_NAME, 'product-description-item').text
 
     def _scrape_promo_dutra(self) -> None:
         if 'Café Dutra' in self.__products:
             return
 
-        body = self.__scraper.scrapeSite("https://loja.cafedutra.com.br/product-category/kits-presentes/")
+        body = self.__scraper.scrape_site("https://loja.cafedutra.com.br/product-category/kits-presentes/")
         # Initialize the list for Dutra products
         self.__products['Café Dutra'] = []
         
@@ -96,16 +96,16 @@ class LoadPromos:
             product_info = {
                 'name': li.find_element(By.CLASS_NAME, 'woocommerce-loop-product__title').text,
                 'original_price': li.find_element(By.TAG_NAME, 'del').text,
-                'discount_price': li.find_element(By.TAG_NAME, 'bdi').text,
+                'discount_price': li.find_element(By.TAG_NAME, 'ins').text,
                 'link': li.find_element(By.TAG_NAME, 'a').get_attribute('href')
             }
             # Add to products list
             self.__products['Café Dutra'].append(product_info)
-        
+
         # get product description
         for product in self.__products['Café Dutra']:
-            body_a = self.__scraper.scrapeSite(product['link'])
-            product['description'] = body_a.find_element(By.CLASS_NAME, 'elementor-tab-content').get_dom_attribute('innerText')
+            body_a = self.__scraper.scrape_site(product['link'])
+            product['description'] = body_a.find_element(By.CLASS_NAME, "content").text
 
 def main():
     promo = LoadPromos()
