@@ -10,23 +10,24 @@ Trata-se de uma aplicação local, desenvolvida utilizando:
 ## sites suportados
 
 o painel do café faz a coleta a partir dos sites:
-- moka clube
-- unique cafés
-- netcafés
+- Moka Clube (produtos)
+- Unique Cafés (produtos)
+- Netcafés (produtos)
+- Café Dutra (promoções e produtos)
+- Encantos do Café (promoções e produtos)
 
 ## funcionalidades
 
 atualmente, o painel realiza:
 
-- coleta de informações dos sites (a desenvolver)
 - levantamento de preços e promoções (a desenvolver)
-- levantamento de cupons de desconto (a desenvolver)
+- coleta de produtos de cada site (a desenvolver)
 
 ## comandos
 
 permitir powershell executar scripts:
 ```
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
 ```
 
 instalar ambiente virtual:
@@ -51,6 +52,5 @@ desativar ambiente virtual:
 
 executar script:
 ```
-python main.py
+py main.py
 ```
-
