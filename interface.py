@@ -1,6 +1,6 @@
 from textual.app import App, ComposeResult
 from textual.containers import Vertical
-from textual.widgets import Header, Label, TabPane, TabbedContent, MarkdownViewer, Input, Button, TextArea
+from textual.widgets import Header, Label, TabPane, TabbedContent, MarkdownViewer, Input, Button, TextArea, Checkbox
 from textual.message import Message
 import json
 from pathlib import Path
@@ -11,10 +11,32 @@ class PainelCafeApp(App):
     TITLE = "Painel do Cafe"
     # CSS_PATH = "painel_cafe.tcss"
     __promo_markdown: str
+    __products_list: dict[str, list[dict]]
     NOTES_FILE = "anotacoes.json"
+
+    def __init__(self):
+        super().__init__()
+        self.__mock_products_list()
+
 
     def set_promo_markdown(self, promos: str) -> None:
         self.__promo_markdown = promos
+
+    def __mock_products_list(self) -> None:
+        self.__products_list = {
+            "Dutra": [
+                {"name": "Café sensações 500g", "price": 10, "description": "descrição café sensações", "quantity": 1, "link": "https://www.google.com"},
+                {"name": "Café doçura 500g", "price": 12, "description": "descrição café doçura", "quantity": 1, "link": "https://www.google.com"},
+            ],
+            "Encantos": [
+                {"name": "Café encantos 500g", "price": 15, "description": "descrição café encantos", "quantity": 1, "link": "https://www.google.com"},
+                {"name": "Café agrado 500g", "price": 15, "description": "descrição café agrado", "quantity": 1, "link": "https://www.google.com"},
+                {"name": "Café raro 500g", "price": 15, "description": "descrição café raro", "quantity": 1, "link": "https://www.google.com"},
+            ],
+        }
+
+    def set_products_list(self, products: dict[str, list[dict]]) -> None:
+        self.__products_list = products
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         """Handle button press events."""
@@ -37,18 +59,28 @@ class PainelCafeApp(App):
                 return data.get("notes", "")
         except FileNotFoundError:
             return ""
+        
+    def __compose_product_form(self, product: dict) -> ComposeResult:
+        """Create form widgets for the purchases tab."""
+        yield Label(f"Café: {product['name']}")
+        yield Label(f"Descrição: {product['description']}")
+        yield Label(f"Preço unitário: R$ {product['price']:.2f}")
+        yield Label("Quantidade:")
+        yield Input(value=str(product["quantity"]))
+        yield Label(f"Link: {product['link']}")
+   
+   
+   
+   
+        yield Checkbox("Comprar")
 
     def __compose_form_compras(self) -> ComposeResult:
-        """Create form widgets for the purchases tab."""
-        yield Label("Café:")
-        yield Input(placeholder="Nome do café")
-        yield Label("Quantidade (g):")
-        yield Input(placeholder="500")
-        yield Label("Preço (R$):")
-        yield Input(placeholder="50.00")
-        yield Label("Data da compra:")
-        yield Input(placeholder="DD/MM/AAAA")
-        yield Button("Adicionar compra", variant="primary")
+        for store, products in self.__products_list.items():
+            yield Label(store)
+            for product in products:
+                yield from self.__compose_product_form(product)
+
+        yield Button("Gerar lista de compras", variant="primary")
 
     def __compose_form_anotacoes(self) -> ComposeResult:
         """Create form widgets for the notes tab."""
