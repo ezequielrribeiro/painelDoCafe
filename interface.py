@@ -35,6 +35,12 @@ class PainelCafeApp(App):
             ],
         }
 
+    def __mock_build_interface(self) -> None:
+        self.__interface = [
+            {"type": "label", "conf": {"text": "Café: Café sensações 600g", "expand": True, "shrink": True, "markup": True, "name": "cafe_sencacoes", "id": "cafe-sensacoes", "classes": None, "disabled": False}, "child": None},
+            {"type": "label", "conf": {"text": "Café: Café sensações 500g", "expand": True, "shrink": True, "markup": True, "name": "cafe_sencacoes_2", "id": "cafe-sensacoes-2", "classes": None, "disabled": False}, "child": None}
+        ]
+
     def set_products_list(self, products: dict[str, list[dict]]) -> None:
         self.__products_list = products
 
