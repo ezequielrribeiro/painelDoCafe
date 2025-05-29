@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional, Type
 
 class TextualInterfaceBuilder:
     """Builds Textual interface components from dictionary configurations."""
-    
+
     __WIDGET_MAPPING = {
         "label": Label,
         "input": Input,
@@ -21,7 +21,7 @@ class TextualInterfaceBuilder:
     def __init__(self):
         self._widgets: List[Widget] = []
 
-    def build_from_dict(self, config: Dict[str, Any]) -> Widget:
+    def build_widget_from_dict(self, config: Dict[str, Any]) -> Widget:
         """Build a widget from a configuration dictionary.
         
         Args:
@@ -45,35 +45,15 @@ class TextualInterfaceBuilder:
         # Create the widget
         return widget_class(**widget_conf)
 
-    def build_from_list(self, configs: List[Dict[str, Any]]) -> List[Widget]:
-        """Build multiple widgets from a list of configurations.
+    def build_widget_from_html(self, html: str) -> Widget:
+        """Build a widget from a html item.
         
         Args:
-            configs: List of widget configuration dictionaries
-            
+            config: html component
+        
         Returns:
-            List[Widget]: List of constructed Textual widgets
+            Widget: The constructed Textual widget
         """
-        return [self.build_from_dict(config) for config in configs]
 
-    def build_container(self, container_type: str, widgets: List[Dict[str, Any]]) -> Widget:
-        """Build a container widget with multiple child widgets.
-        
-        Args:
-            container_type: Type of container ("vertical" or "horizontal")
-            widgets: List of widget configurations to be added to the container
-            
-        Returns:
-            Widget: The container widget with mounted children
-        """
-        if container_type not in ["vertical", "horizontal"]:
-            raise ValueError("Container type must be 'vertical' or 'horizontal'")
-            
-        container_class = self.__WIDGET_MAPPING[container_type]
-        container = container_class()
-        
-        for widget_config in widgets:
-            widget = self.build_from_dict(widget_config)
-            container.mount(widget)
-            
-        return container
+        # TODO: make html interpreter to dict, then build_widget_from_dict is called
+
